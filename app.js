@@ -1,16 +1,16 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const session = require('express-session');
-var passport = require('passport');
-var crypto = require('crypto');
-var routes = require('./routes');
-const connection = require('./config/database');
+import express, { json, urlencoded } from 'express';
+import mongoose from 'mongoose';
+import session from 'express-session';
+import { initialize, session as _session } from 'passport';
+import crypto from 'crypto';
+import routes from './routes';
+import connection from './config/database';
 
 // Package documentation - https://www.npmjs.com/package/connect-mongo
 const MongoStore = require('connect-mongo')(session);
 
 // Need to require the entire Passport config module so app.js knows about it
-require('./config/passport');
+import './config/passport';
 
 /**
  * -------------- GENERAL SETUP ----------------
@@ -22,9 +22,8 @@ require('dotenv').config();
 // Create the Express application
 var app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 /**
  * -------------- SESSION SETUP ----------------
@@ -36,9 +35,7 @@ app.use(express.urlencoded({extended: true}));
  * -------------- PASSPORT AUTHENTICATION ----------------
  */
 
-app.use(passport.initialize());
-app.use(passport.session());
-
+app.use(_session());
 
 /**
  * -------------- ROUTES ----------------
@@ -46,7 +43,6 @@ app.use(passport.session());
 
 // Imports all of the routes from ./routes/index.js
 app.use(routes);
-
 
 /**
  * -------------- SERVER ----------------
