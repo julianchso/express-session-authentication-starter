@@ -1,8 +1,8 @@
-const router = require('express').Router();
+import { Router } from 'express';
+const router = Router();
+
 import passport from 'passport';
-import passwordUtils from '../lib/passwordUtils';
-import connection from '../config/database';
-const User = connection.models.User;
+import { genPassword, validatePassword } from '../lib/passwordUtils.js';
 
 /**
  * -------------- POST ROUTES ----------------
@@ -12,7 +12,24 @@ const User = connection.models.User;
 router.post('/login', passport.authenticate('local'), (req, res, next) => {});
 
 // TODO
-router.post('/register', (req, res, next) => {});
+router.post('/register', (req, res, next) => {
+  const saltHash = genPassword(req.body.pw);
+
+  const salt = saltHash.salt;
+  const hash = saltHash.hash;
+
+  const newUser = new User({
+    username: req.body.uname,
+    hash: hash,
+    salt: salt,
+  });
+
+  newUser.save().then((user) => {
+    console.log(user);
+  });
+
+  res.redirect('/login');
+});
 
 /**
  * -------------- GET ROUTES ----------------
