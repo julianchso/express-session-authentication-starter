@@ -11,20 +11,23 @@ const customFields = {
 
 const verifyCallback = async (username, password, done) => {
   try {
-    const { rows } =
-      (await pool.query(`SELECT * FROM session WHERE sess ->> 'username' = $1`, [username])) ||
-      [].then((user) => {
-        if (!user) {
-          return done(null, false);
-        }
-        const isValid = validatePassword(password, user.hash, user.salt);
+    const { rows } = await pool.query(`SELECT * FROM users WHERE username = $1`, [username]);
 
-        if (isValid) {
-          return done(null, user);
-        } else {
-          return done(null, false);
-        }
-      });
+    const user = rows[0];
+
+    console.log(user);
+    if (!user) {
+      return done(null, false);
+    }
+    const isValid = validatePassword(password, user.hash, user.salt);
+
+    if (isValid) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+
+    console.log(rows[0].username);
   } catch (err) {
     return done(err);
   }

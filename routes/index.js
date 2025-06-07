@@ -11,7 +11,6 @@ const router = Router();
  * -------------- POST ROUTES ----------------
  */
 
-// TODO
 router.post(
   '/login',
   passport.authenticate('local', {
@@ -20,7 +19,6 @@ router.post(
   })
 );
 
-// TODO
 router.post('/register', async (req, res, next) => {
   const saltHash = genPassword(req.body.pw);
   const salt = saltHash.salt;
@@ -64,7 +62,7 @@ router.get('/', (req, res, next) => {
 // When you visit http://localhost:3000/login, you will see "Login Page"
 router.get('/login', (req, res, next) => {
   const form =
-    '<h1>Login Page</h1><form method="POST" action="/login">\
+    '<h1>Login Page</h1><form method="post" action="/login">\
     Enter Username:<br><input type="text" name="uname">\
     <br>Enter Password:<br><input type="password" name="pw">\
     <br><br><input type="submit" value="Submit"></form>';
